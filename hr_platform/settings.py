@@ -6,6 +6,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'drf_yasg',
+    'rest_framework.authtoken',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -14,6 +16,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "resumes",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -46,7 +49,21 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
 }
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
+
+AUTH_USER_MODEL = 'users.User'
 
 DATABASES = {
     "default": {
