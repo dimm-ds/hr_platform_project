@@ -1,2 +1,7 @@
 /venv
 db.sqlite3
+.env
+*.env
+.env.local
+/data
+/static

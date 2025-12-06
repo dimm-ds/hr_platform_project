@@ -17,8 +17,8 @@ class ResumeViewSet(viewsets.ModelViewSet):
         user = self.request.user
 
 
-        # Super и HR видят всё
-        if user.is_superuser or user.role.name == 'HR Managers':
+        # Super admin и HR видят всё
+        if user.is_superuser or user.role.name in ('HR Manager', 'admin'):
             return Resume.objects.all()
 
         # Users видят только свои
