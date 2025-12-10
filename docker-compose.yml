@@ -1,4 +1,20 @@
 services:
+  postgres:
+    image: postgres:16.9
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+
   web:
     build:
       context: .
@@ -11,6 +27,9 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DEBUG: ${DEBUG}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - ./static:/usr/src/app/static
 
@@ -21,14 +40,7 @@ services:
       - "443:443"
     depends_on:
       - web
+    restart: on-failure
     volumes:
       - ./static:/var/www/static
 
-  postgres:
-    image: postgres:16.9
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_DB=${DB_NAME}

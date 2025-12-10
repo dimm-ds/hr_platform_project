@@ -5,9 +5,9 @@ from django.urls import path, include
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Polls API",
+        title="RESUMES API",
         default_version='v1',
-        description="Polls application documentation",
+        description="Resumes application documentation",
     ),
     permission_classes=[],
     public=True

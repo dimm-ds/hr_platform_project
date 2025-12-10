@@ -7,7 +7,6 @@ class ResumePermission(BasePermission):
 
         if not user.is_authenticated or not user.role:
             return False
-
         action_to_permission = {
             'list': 'view_resume',
             'retrieve': 'view_resume',
@@ -18,10 +17,7 @@ class ResumePermission(BasePermission):
         }
 
         required_perm = action_to_permission.get(view.action)
-        if not required_perm:
-            return True  # для неизвестных action разрешаем
 
-        # Проверяем право в роли пользователя
         return request.user.role.permissions.filter(
             codename=required_perm
         ).exists()

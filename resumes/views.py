@@ -13,13 +13,12 @@ class ResumeViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Resume.objects.none()
 
         user = self.request.user
 
-
-        # Super admin и HR видят всё
         if user.is_superuser or user.role.name in ('HR Manager', 'admin'):
             return Resume.objects.all()
 
-        # Users видят только свои
         return Resume.objects.filter(user=user)
